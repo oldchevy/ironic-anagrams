@@ -42,8 +42,10 @@ export default class FriendsTab extends Component {
   // This will happen when the component is mounted, and will show a list (via FriendsList) of 
   // friends (via Friend).
   getFriends(){
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch('http://localhost:3000/api/friends', {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      fetch(`${url}api/friends`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -70,8 +72,10 @@ export default class FriendsTab extends Component {
   // This will happen when the component is mounted, and will show a list (via RequestList) of 
   // requests (via Request).
   getFriendRequests() {
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch('http://localhost:3000/api/friendreq', {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      fetch(`${url}api/friendreq`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -92,9 +96,11 @@ export default class FriendsTab extends Component {
 
   // Accepting a friend request occurs on the Request view.
   acceptFriendRequest(requestId){
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
       var message = { requestId: requestId };
-      fetch('http://localhost:3000/api/friendreq', {
+      fetch(`${url}api/friendreq`, {
         method: 'POST',
         headers: {
          'Content-Type': 'application/json',
@@ -114,9 +120,11 @@ export default class FriendsTab extends Component {
 
   // Rejecting a friend request occurs on the Request view.  
   rejectFriendRequest(requestId) {
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
       var req = {requestId: requestId};
-      fetch('http://localhost:3000/api/friendreq', {
+      fetch(`${url}api/friendreq`, {
         method: 'DELETE',
         headers: {
          'Content-Type': 'application/json',

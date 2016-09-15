@@ -28,8 +28,8 @@ export default class AuthParent extends React.Component {
 
   renderTab() {
     if (this.state.page === "Splash") return <SplashScreen/>;
-    if (this.state.page === "SignupTab") return <SignupTab updateStatus={this.props.updateStatus} />;
-    if (this.state.page === "LoginTab") return <LoginTab updateStatus={this.props.updateStatus} />;
+    if (this.state.page === "SignupTab") return <SignupTab updateStatus={this.props.updateStatus} url={this.props.url}/>;
+    if (this.state.page === "LoginTab") return <LoginTab updateStatus={this.props.updateStatus} url={this.props.url}/>;
 
   }
 

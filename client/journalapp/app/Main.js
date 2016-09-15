@@ -103,8 +103,12 @@ export default class Main extends Component {
   getEntries(tabs){
     //tabs is an array of strings like ['#hash', '#test']
     tabs = JSON.stringify(tabs) || '[]';
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch(`http://localhost:3000/api/entries?tags=${tabs}`, {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+      console.log(store);
+      var token = store[0][1];
+      var url = store[1][1];
+      fetch(`${ url }api/entries?tags=${tabs}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -155,9 +159,11 @@ export default class Main extends Component {
       tag = '';
     }
     console.log(tags);
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
       var newEntry = { text: this.state.newEntry, location: this.state.location, tags: tags};
-      fetch('http://localhost:3000/api/entries', {
+      fetch(`${ url }/api/entries`, {
         method: 'POST',
         headers: {
          'Content-Type': 'application/json',

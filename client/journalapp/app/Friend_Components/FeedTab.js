@@ -38,8 +38,10 @@ export default class FeedTab extends Component {
   // This will happen when the component is mounted, and will show a list (via FriendsList) of 
   // friends (via Friend).
   getFriends(callback) {
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch('http://localhost:3000/api/friends', {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      fetch(`${url}api/friends`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -88,8 +90,10 @@ export default class FeedTab extends Component {
 
   getFriendPosts(friendId, callback) {
     console.log('Getting a friends posts');
-    var url = 'http://localhost:3000/api/entries' + '/?userId=' + friendId.toString();
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url0 = store[1][1];
+      var url = `${url0}api/entries` + '/?userId=' + friendId.toString();
       fetch(url, {
         method: 'GET',
         headers: {

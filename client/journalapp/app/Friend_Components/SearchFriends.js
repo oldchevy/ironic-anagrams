@@ -29,9 +29,12 @@ export default class SearchFriends extends Component {
   // This method fires whenever a user enters input in the input text in this component
   // (see the jsx template below).
   findMatching(query) {
-    var url = 'http://localhost:3000/api/users' + "/?username=" + query;
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch(url , {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url0 = store[1][1];
+      var url = `${url}api/users` + '/?username=' + query;
+
+      fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,25 +58,27 @@ export default class SearchFriends extends Component {
 
   // Sending the friend request occurs when the user clicks the friend icon in the SearchResultRow view. 
   sendFriendReq(id, navigator) {
-     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-       var message = {requestReceiver:id};
-       fetch('http://localhost:3000/api/friendreq', {
-         method: 'POST',
-         headers: {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      var message = {requestReceiver:id};
+      fetch(`${url}api/friendreq`, {
+        method: 'POST',
+        headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-         },
-         body: JSON.stringify(message)
-       })
+        },
+        body: JSON.stringify(message)
+      })
          .then((response) => {
             // Uncomment this pop if you want the screen to pan back to the friends list after a request is sent. 
             // Set a timer around it to make the transition delayed.
             //navigator.pop();
          })
            .catch((error) => {
-             console.warn("fetch error:", error)
+             console.warn("fetch error:", error);
            });
-     });
+    });
   }
 
   // TODO (?) Use lodash throttling (a la recastly sprint) to prevent blowing up the server
